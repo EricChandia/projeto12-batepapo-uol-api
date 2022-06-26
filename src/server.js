@@ -160,7 +160,7 @@ setInterval(async () => {
         const deletedParticipants = await db.collection('participants').deleteMany({lastStatus: {$lt: timeNowMinus10s}});
         // console.log(deletedParticipants);
         
-        console.log(deleteParticipants.length);
+        // console.log(deleteParticipants.length);
         deleteParticipants.forEach(saiDaSala);
 
     async function saiDaSala(item, indice){
