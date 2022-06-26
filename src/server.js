@@ -79,22 +79,11 @@ app.get('/messages', async (req, res) => {
 	
     try{
         if(limit){
-            const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user} ] }).limit(limit).toArray();
-            let messagesReturn;
-            
-            
-            for(let i=messages.length;i>0;i--){
-                if(messagesReturn.length === 50){
-                    break;
-                }else{
-                    messagesReturn = messages[i];
-                }
-            }
-
-            res.send(messagesReturn);
+            const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user} ] }).sort({_id: -1}).limit(limit).toArray();
+            res.send(messages.reverse());
         }else{
             const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user} ] }).toArray();
-            res.send(messages);
+            res.send(messages.reverse());
         }
 
     }catch(error){
