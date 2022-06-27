@@ -79,7 +79,7 @@ app.get('/messages', async (req, res) => {
 	
     try{
         if(limit){
-            const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user} ] }).sort({_id: -1}).limit(limit).toArray();
+            const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user}, {type: "message"} ] }).sort({_id: -1}).limit(limit).toArray();
             res.send(messages.reverse());
         }else{
             const messages = await db.collection('messages').find({ $or: [  {to: "Todos"}, {to: user}, {from: user} ] }).toArray();
@@ -151,29 +151,29 @@ app.post('/status', async (req, res) => {
     }
 });
 
-setInterval(async () => { 
-    const timeNowMinus10s = Date.now() - 10000;
+// setInterval(async () => { 
+//     const timeNowMinus10s = Date.now() - 10000;
     
-    try{
-        const deleteParticipants = await db.collection('participants').find({ lastStatus: {$lt: timeNowMinus10s} }).toArray();
+//     try{
+//         const deleteParticipants = await db.collection('participants').find({ lastStatus: {$lt: timeNowMinus10s} }).toArray();
 
-        const deletedParticipants = await db.collection('participants').deleteMany({lastStatus: {$lt: timeNowMinus10s}});
-        // console.log(deletedParticipants);
+//         const deletedParticipants = await db.collection('participants').deleteMany({lastStatus: {$lt: timeNowMinus10s}});
+//         // console.log(deletedParticipants);
         
-        // console.log(deleteParticipants.length);
-        deleteParticipants.forEach(saiDaSala);
+//         // console.log(deleteParticipants.length);
+//         deleteParticipants.forEach(saiDaSala);
 
-    async function saiDaSala(item, indice){
-        const message = {from: item.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss')};
-        const sairam = await db.collection('messages').insertOne(message);
-        console.log(sairam);
-    }
+//     async function saiDaSala(item, indice){
+//         const message = {from: item.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:mm:ss')};
+//         const sairam = await db.collection('messages').insertOne(message);
+//         console.log(sairam);
+//     }
 
-    }catch(error){
-        console.error(error);
-    }
+//     }catch(error){
+//         console.error(error);
+//     }
     
-}, 15000);
+// }, 15000);
 
 app.listen(5000, () => {
     console.log('Server is litening on port 5000.');
